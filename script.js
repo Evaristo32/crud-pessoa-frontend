@@ -41,3 +41,31 @@ function limparForm() {
     document.getElementById('nome').value = '';
     document.getElementById('email').value = '';
 }
+
+async function carregarPessoas() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error("Erro ao buscar dados da API");
+        }
+
+        const pessoas = await response.json();
+        const tbody = document.querySelector("#pessoas-table tbody");
+        tbody.innerHTML = "";
+
+        pessoas.forEach(pessoa => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${pessoa.id}</td>
+                <td>${pessoa.nome}</td>
+                <td>${pessoa.email}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", carregarPessoas);
