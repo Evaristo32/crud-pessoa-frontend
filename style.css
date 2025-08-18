@@ -71,3 +71,27 @@ th {
 tr:hover {
     background-color: #f1f1f1;
 }
+
+.btn-editar {
+    background-color: #ff9000;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-editar:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+
+.btn-editar:active {
+    transform: scale(0.95);
+}

@@ -1,38 +1,37 @@
-
 const API_URL = 'http://localhost:8080/api/v1/pessoa'; // Altere se o backend estiver em outra porta
 
 document.getElementById('pessoa-form')
     .addEventListener('submit', async function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const id = document.getElementById('pessoa-id').value;
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
+        const id = document.getElementById('pessoa-id').value;
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
 
-    const pessoa = { nome, email };
+        const pessoa = {nome, email};
 
-    try {
-        if (id) {
-            await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pessoa)
-            });
-        } else {
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pessoa)
-            });
+        try {
+            if (id) {
+                await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(pessoa)
+                });
+            } else {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(pessoa)
+                });
+            }
+
+            limparForm();
+            await carregarPessoas();
+        } catch (e) {
+            alert('Erro ao salvar pessoa!');
+            console.error(e);
         }
-
-        limparForm();
-        // listarPessoas();
-    } catch (e) {
-        alert('Erro ao salvar pessoa!');
-        console.error(e);
-    }
-});
+    });
 
 
 function limparForm() {
@@ -54,18 +53,33 @@ async function carregarPessoas() {
         tbody.innerHTML = "";
 
         pessoas.forEach(pessoa => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
+            const row = document.createElement("tr");
+
+            const idBtnAlterar = `pessoa-${pessoa.id}-alterar`;
+
+            row.innerHTML = `
                 <td>${pessoa.id}</td>
                 <td>${pessoa.nome}</td>
                 <td>${pessoa.email}</td>
+                <td>
+                     <button  id="${idBtnAlterar}" class="btn-editar" title="Editar">✏️</button>
+                </td>
             `;
-            tbody.appendChild(tr);
+
+            row.querySelector(`#${idBtnAlterar}`).addEventListener('click', () => preencherFormParaEdicao(pessoa))
+
+            tbody.appendChild(row);
         });
 
     } catch (error) {
         console.log(error);
     }
+}
+
+function preencherFormParaEdicao(pessoa) {
+    document.getElementById('pessoa-id').value = pessoa.id;
+    document.getElementById('nome').value = pessoa.nome;
+    document.getElementById('email').value = pessoa.email;
 }
 
 document.addEventListener("DOMContentLoaded", carregarPessoas);
